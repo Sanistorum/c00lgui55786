@@ -95,11 +95,9 @@ local Button = MainTab:CreateButton({
 
 
 MainTab:CreateButton({
-    Name = "Eclipse Hub",
+    Name = "Eclipse Hub (RawScripts)",
     Callback = function()
-        pcall(function()
-            loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Eclipse-Hub-13092"))()
-        end)
+        loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Eclipse-Hub-13092"))()
     end,
 })
 
