@@ -58,5 +58,13 @@ game:GetService("UserInputService").JumpRequest:Connect(function()
 	end
 end)
 
+local Button = MainTab:CreateButton({
+   Name = "Infinite Yield",
+   Callback = function()
+       loadstring(game:HttpGet("https://raw.githubusercontent.com/XNEOFF/FlyGuiV3/main/FlyGuiV3.txt"))()
+   end,
+})
+
+
 
 Rayfield:LoadConfiguration()
