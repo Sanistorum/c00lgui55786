@@ -40,68 +40,23 @@ local MainWindow = Rayfield:CreateWindow({
 local MainTab = MainWindow:CreateTab("Main", 4483362458) -- Title, Image
 
 
-local Players = game:GetService("Players")
-local UIS = game:GetService("UserInputService")
-local RunService = game:GetService("RunService")
-local player = Players.LocalPlayer
-local flying = false
-local speed = 50
-local bv, bg
-
-
-local function startFly()
-	local char = player.Character
-	if not char or not char:FindFirstChild("HumanoidRootPart") then return end
-
-	local hrp = char.HumanoidRootPart
-	bv = Instance.new("BodyVelocity")
-	bg = Instance.new("BodyGyro")
-
-	bv.MaxForce = Vector3.new(9e9, 9e9, 9e9)
-	bv.Velocity = Vector3.zero
-	bv.P = 1250
-	bv.Parent = hrp
-
-	bg.MaxTorque = Vector3.new(9e9, 9e9, 9e9)
-	bg.P = 3000
-	bg.CFrame = hrp.CFrame
-	bg.Parent = hrp
-
-	-- Movement loop
-	RunService:BindToRenderStep("Fly", Enum.RenderPriority.Character.Value + 1, function()
-		if not flying then return end
-		local cam = workspace.CurrentCamera
-		local move = Vector3.zero
-
-		if UIS:IsKeyDown(Enum.KeyCode.W) then move += cam.CFrame.LookVector end
-		if UIS:IsKeyDown(Enum.KeyCode.S) then move -= cam.CFrame.LookVector end
-		if UIS:IsKeyDown(Enum.KeyCode.A) then move -= cam.CFrame.RightVector end
-		if UIS:IsKeyDown(Enum.KeyCode.D) then move += cam.CFrame.RightVector end
-
-		bv.Velocity = move.Unit * speed
-		bg.CFrame = cam.CFrame
-	end)
-end
-
-local function stopFly()
-	RunService:UnbindFromRenderStep("Fly")
-	if bv then bv:Destroy() end
-	if bg then bg:Destroy() end
-end
-
 MainTab:CreateToggle({
-	Name = "Fly Toggle",
+	Name = "Infinite Jump",
 	CurrentValue = false,
-	Flag = "FlyToggle",
-	Callback = function(Value)
-		flying = Value
-		if flying then
-			startFly()
-		else
-			stopFly()
-		end
+	Flag = "InfiniteJumpToggle",
+	Callback = function(value)
+		enabled = value
 	end,
 })
+
+game:GetService("UserInputService").JumpRequest:Connect(function()
+	if enabled then
+		local humanoid = game.Players.LocalPlayer.Character:FindFirstChildOfClass("Humanoid")
+		if humanoid then
+			humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
+		end
+	end
+end)
 
 
 Rayfield:LoadConfiguration()
