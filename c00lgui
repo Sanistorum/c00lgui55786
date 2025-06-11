@@ -85,5 +85,4 @@ MainTab:CreateButton({
     end,
 })
 
-
 Rayfield:LoadConfiguration()
