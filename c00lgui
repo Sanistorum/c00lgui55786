@@ -40,50 +40,6 @@ local MainWindow = Rayfield:CreateWindow({
 local MainTab = MainWindow:CreateTab("Main", 4483362458) -- Title, Image
 
 
-Tab:CreateToggle({
-    Name = "Fly",
-    CurrentValue = false,
-    Callback = function(Value)
-        if Value then
-            -- Enable fly
-            local plr = game.Players.LocalPlayer
-            local char = plr.Character or plr.CharacterAdded:Wait()
-            local hrp = char:WaitForChild("HumanoidRootPart")
-            local bv = Instance.new("BodyVelocity")
-            bv.Name = "FlyVelocity"
-            bv.MaxForce = Vector3.new(1e5, 1e5, 1e5)
-            bv.Velocity = Vector3.zero
-            bv.Parent = hrp
-
-            local uis = game:GetService("UserInputService")
-            _G.flyConn = game:GetService("RunService").Heartbeat:Connect(function()
-                local dir = Vector3.zero
-                if uis:IsKeyDown(Enum.KeyCode.W) then dir = dir + Vector3.new(0, 0, -1) end
-                if uis:IsKeyDown(Enum.KeyCode.S) then dir = dir + Vector3.new(0, 0, 1) end
-                if uis:IsKeyDown(Enum.KeyCode.A) then dir = dir + Vector3.new(-1, 0, 0) end
-                if uis:IsKeyDown(Enum.KeyCode.D) then dir = dir + Vector3.new(1, 0, 0) end
-                if uis:IsKeyDown(Enum.KeyCode.Space) then dir = dir + Vector3.new(0, 1, 0) end
-                if uis:IsKeyDown(Enum.KeyCode.LeftControl) then dir = dir + Vector3.new(0, -1, 0) end
-                bv.Velocity = hrp.CFrame:VectorToWorldSpace(dir.Unit) * 50
-            end)
-        else
-            -- Disable fly
-            local plr = game.Players.LocalPlayer
-            local char = plr.Character
-            if char then
-                local hrp = char:FindFirstChild("HumanoidRootPart")
-                if hrp then
-                    local bv = hrp:FindFirstChild("FlyVelocity")
-                    if bv then bv:Destroy() end
-                end
-            end
-            if _G.flyConn then
-                _G.flyConn:Disconnect()
-                _G.flyConn = nil
-            end
-        end
-    end,
-})
 
 
-  Rayfield:LoadConfiguration()
+Rayfield:LoadConfiguration()
