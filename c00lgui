@@ -40,7 +40,7 @@ local MainWindow = Rayfield:CreateWindow({
 local MainTab = MainWindow:CreateTab("Main", 4483362458) -- Title, Image
 
 
-Tab:CreateToggle({
+MainTab:CreateToggle({
     Name = "Fly",
     CurrentValue = false,
     Callback = function(Value)
