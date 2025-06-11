@@ -40,59 +40,67 @@ local MainWindow = Rayfield:CreateWindow({
 local MainTab = MainWindow:CreateTab("Main", 4483362458) -- Title, Image
 
 
-local toggle = MainTab:CreateToggle({
-    Name = "Fly",
-    CurrentValue = false,
-    Flag = "FlyToggle",
-    Callback = function(value)
-        flying = value
-        if flying then
-            local character = player.Character
-            if not character then return end
-            local root = character:FindFirstChild("HumanoidRootPart")
-            if not root then return end
+local Players = game:GetService("Players")
+local UIS = game:GetService("UserInputService")
+local RunService = game:GetService("RunService")
+local player = Players.LocalPlayer
+local flying = false
+local speed = 50
+local bv, bg
 
-            bodyVelocity = Instance.new("BodyVelocity", root)
-            bodyVelocity.Velocity = Vector3.new(0,0,0)
-            bodyVelocity.MaxForce = Vector3.new(1e5, 1e5, 1e5)
 
-            bodyGyro = Instance.new("BodyGyro", root)
-            bodyGyro.MaxTorque = Vector3.new(1e5, 1e5, 1e5)
-            bodyGyro.P = 1e4
+local function startFly()
+	local char = player.Character
+	if not char or not char:FindFirstChild("HumanoidRootPart") then return end
 
-            spawn(function()
-                while flying and bodyVelocity and bodyGyro do
-                    game:GetService("RunService").Heartbeat:Wait()
-                    local cameraCFrame = workspace.CurrentCamera.CFrame
-                    local moveDirection = Vector3.new()
+	local hrp = char.HumanoidRootPart
+	bv = Instance.new("BodyVelocity")
+	bg = Instance.new("BodyGyro")
 
-                    if game:GetService("UserInputService"):IsKeyDown(Enum.KeyCode.W) then
-                        moveDirection = moveDirection + cameraCFrame.LookVector
-                    end
-                    if game:GetService("UserInputService"):IsKeyDown(Enum.KeyCode.S) then
-                        moveDirection = moveDirection - cameraCFrame.LookVector
-                    end
-                    if game:GetService("UserInputService"):IsKeyDown(Enum.KeyCode.A) then
-                        moveDirection = moveDirection - cameraCFrame.RightVector
-                    end
-                    if game:GetService("UserInputService"):IsKeyDown(Enum.KeyCode.D) then
-                        moveDirection = moveDirection + cameraCFrame.RightVector
-                    end
+	bv.MaxForce = Vector3.new(9e9, 9e9, 9e9)
+	bv.Velocity = Vector3.zero
+	bv.P = 1250
+	bv.Parent = hrp
 
-                    moveDirection = moveDirection.Unit * flySpeed
-                    if moveDirection ~= moveDirection then -- Check for NaN
-                        moveDirection = Vector3.new(0,0,0)
-                    end
+	bg.MaxTorque = Vector3.new(9e9, 9e9, 9e9)
+	bg.P = 3000
+	bg.CFrame = hrp.CFrame
+	bg.Parent = hrp
 
-                    bodyVelocity.Velocity = moveDirection + Vector3.new(0, 0, 0)
-                    bodyGyro.CFrame = workspace.CurrentCamera.CFrame
-                end
-            end)
-        else
-            if bodyVelocity then bodyVelocity:Destroy() end
-            if bodyGyro then bodyGyro:Destroy() end
-        end
-    end
+	-- Movement loop
+	RunService:BindToRenderStep("Fly", Enum.RenderPriority.Character.Value + 1, function()
+		if not flying then return end
+		local cam = workspace.CurrentCamera
+		local move = Vector3.zero
+
+		if UIS:IsKeyDown(Enum.KeyCode.W) then move += cam.CFrame.LookVector end
+		if UIS:IsKeyDown(Enum.KeyCode.S) then move -= cam.CFrame.LookVector end
+		if UIS:IsKeyDown(Enum.KeyCode.A) then move -= cam.CFrame.RightVector end
+		if UIS:IsKeyDown(Enum.KeyCode.D) then move += cam.CFrame.RightVector end
+
+		bv.Velocity = move.Unit * speed
+		bg.CFrame = cam.CFrame
+	end)
+end
+
+local function stopFly()
+	RunService:UnbindFromRenderStep("Fly")
+	if bv then bv:Destroy() end
+	if bg then bg:Destroy() end
+end
+
+MainTab:CreateToggle({
+	Name = "Fly Toggle",
+	CurrentValue = false,
+	Flag = "FlyToggle",
+	Callback = function(Value)
+		flying = Value
+		if flying then
+			startFly()
+		else
+			stopFly()
+		end
+	end,
 })
 
 
