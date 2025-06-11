@@ -85,4 +85,12 @@ MainTab:CreateButton({
     end,
 })
 
+
+local Button = MainTab:CreateButton({
+    Name = "FlyGuiV3",
+    Callback = function()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/XNEOFF/FlyGuiV3/main/FlyGuiV3.txt"))()
+    end,
+})
+
 Rayfield:LoadConfiguration()
