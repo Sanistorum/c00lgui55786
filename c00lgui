@@ -80,7 +80,7 @@ MainTab:CreateButton({
     Name = "sussy funny script R15",
     Callback = function()
         pcall(function()
-            loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-R15-Jerk-Off-Tool-38782"))()
+            loadstring(game:HttpGet("https://pastefy.app/YZoglOyJ/raw"))()
         end)
     end,
 })
