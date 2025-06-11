@@ -93,4 +93,14 @@ local Button = MainTab:CreateButton({
     end,
 })
 
+
+MainTab:CreateButton({
+    Name = "Eclipse Hub",
+    Callback = function()
+        pcall(function()
+            loadstring(game:HttpGet("https://raw.githubusercontent.com/Ethanoj1/EclipseMM2/master/Script", true))()
+        end)
+    end,
+})
+
 Rayfield:LoadConfiguration()
