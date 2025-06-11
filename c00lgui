@@ -66,16 +66,8 @@ local Button = MainTab:CreateButton({
 })
 
 
-local Button = MainTab:CreateButton({
-    Name = "sussy funny script r15",
-    Callback = function()
-        loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-R15-Jerk-Off-Tool-38782"))()
-    end,
-})
-
-
-local Button = MainTab:CreateButton({
-    Name = "sussy funny script r6",
+MainTab:CreateButton({
+    Name = "sussy funny script R6",
     Callback = function()
         pcall(function()
             loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-jerk-off-goon-28106"))()
