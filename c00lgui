@@ -40,19 +40,60 @@ local MainWindow = Rayfield:CreateWindow({
 local MainTab = MainWindow:CreateTab("Main", 4483362458) -- Title, Image
 
 
-local Toggle = MainTab:CreateToggle({
-   Name = "Fly",
-   CurrentValue = false,
-   Flag = "ToggleFly",
-   Callback = function(Value)
-      if Value then
-         fly(true) -- Enable fly using the exploit's built-in function
-      else
-         fly(false) -- Disable fly
-      end
-   end,
-})
+local toggle = MainTab:CreateToggle({
+    Name = "Fly",
+    CurrentValue = false,
+    Flag = "FlyToggle",
+    Callback = function(value)
+        flying = value
+        if flying then
+            local character = player.Character
+            if not character then return end
+            local root = character:FindFirstChild("HumanoidRootPart")
+            if not root then return end
 
+            bodyVelocity = Instance.new("BodyVelocity", root)
+            bodyVelocity.Velocity = Vector3.new(0,0,0)
+            bodyVelocity.MaxForce = Vector3.new(1e5, 1e5, 1e5)
+
+            bodyGyro = Instance.new("BodyGyro", root)
+            bodyGyro.MaxTorque = Vector3.new(1e5, 1e5, 1e5)
+            bodyGyro.P = 1e4
+
+            spawn(function()
+                while flying and bodyVelocity and bodyGyro do
+                    game:GetService("RunService").Heartbeat:Wait()
+                    local cameraCFrame = workspace.CurrentCamera.CFrame
+                    local moveDirection = Vector3.new()
+
+                    if game:GetService("UserInputService"):IsKeyDown(Enum.KeyCode.W) then
+                        moveDirection = moveDirection + cameraCFrame.LookVector
+                    end
+                    if game:GetService("UserInputService"):IsKeyDown(Enum.KeyCode.S) then
+                        moveDirection = moveDirection - cameraCFrame.LookVector
+                    end
+                    if game:GetService("UserInputService"):IsKeyDown(Enum.KeyCode.A) then
+                        moveDirection = moveDirection - cameraCFrame.RightVector
+                    end
+                    if game:GetService("UserInputService"):IsKeyDown(Enum.KeyCode.D) then
+                        moveDirection = moveDirection + cameraCFrame.RightVector
+                    end
+
+                    moveDirection = moveDirection.Unit * flySpeed
+                    if moveDirection ~= moveDirection then -- Check for NaN
+                        moveDirection = Vector3.new(0,0,0)
+                    end
+
+                    bodyVelocity.Velocity = moveDirection + Vector3.new(0, 0, 0)
+                    bodyGyro.CFrame = workspace.CurrentCamera.CFrame
+                end
+            end)
+        else
+            if bodyVelocity then bodyVelocity:Destroy() end
+            if bodyGyro then bodyGyro:Destroy() end
+        end
+    end
+})
 
 
 Rayfield:LoadConfiguration()
