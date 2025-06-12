@@ -109,7 +109,7 @@ MainTab:CreateButton({
 })
 
 
-local Button = Tab:CreateButton({
+local Button = MainTab:CreateButton({
    Name = "Super Ring Parts V6",
    Callback = function()
        loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Super-ring-parts-V6-Open-source-No-chat-26899"))()
